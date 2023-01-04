@@ -1,6 +1,7 @@
 # NBA-Salary-Prediction
 
-NBA Salary Prediction(NBASalaryProject.Rmd)
+NBA Salary Prediction(NBASalaryProject.Rmd):
+
 Read in Salary, Total Stats, Advanced stats, and Per 100 stats from Bball-Ref from the 2021 season, with the goal of predicting a player's 2022 salary based on their 2021 statistics. Removed redundant variables and merged all 4 files onto each other into master dataset.
 
 Checked for multi-collinearity using correlation matrices and removed problem variables.
