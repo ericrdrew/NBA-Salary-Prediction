@@ -7,30 +7,32 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(car)
+library(nortest)
 ```
 
 Read in 2021-2022 salary dataset from bball ref(only top 500 salaries, TBD getting all 600+), read in stat data
 ```{r Data}
 #https://www.basketball-reference.com/contracts/players.html
-salary <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\Salary.csv")
+salary <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\Salary.csv")
 colnames(salary) <- c("Rank", "Player", "Team","Sal2122", "Sal2223", "SignedUsing", "Guaranteed")
 
 #https://www.basketball-reference.com/leagues/NBA_2022_totals.html
 #Total Stat data
-totalStats <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\totalStats.csv")
+totalStats <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\totalStats.csv")
 #If a player changed teams mid season, he will have 3+ observations(total stats, stats for team 1, stats for team 2)
 #Remove the "total" observation(for now)
 totalStats <- totalStats %>% filter(Tm!='TOT')
 
 #https://www.basketball-reference.com/leagues/NBA_2022_advanced.html
 #Advanced Stats Data
-advanced <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\advancedStats.csv")
+advanced <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\advancedStats.csv")
 #Remove the "total" observation(for now)
 advanced <- advanced %>% filter(Tm!='TOT')
 
 #https://www.basketball-reference.com/leagues/NBA_2022_adj_shooting.html
 #Per 100 possessions data
-per100 <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\per100.csv")
+per100 <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\per100.csv")
 #Remove the "total" observation(for now)
 per100 <- per100 %>% filter(Tm!='TOT')
 ```
@@ -195,9 +197,9 @@ ggplot(forward, aes(x=ORPG, y=resid(forward))) + geom_point() #not evenly distri
 ggplot(forward, aes(x=BPG, y=resid(forward))) + geom_point() #mostly random even tho most obs are 0-1
 ggplot(forward, aes(x=DRPG, y=resid(forward))) + geom_point() #seems random
 ggplot(forward, aes(x=FoulPG, y=resid(forward))) + geom_point() #***not many obs but the pattern shows
-ggplot(forward, aes(x=PER, y=resid(forward))) + geom_point() #***drawn out and few obs but pattern shows
-ggplot(forward, aes(x=MPG, y=resid(forward))) + geom_point() #***Notable fanning, looks to be both sides tho
-ggplot(forward, aes(x=USG., y=resid(forward))) + geom_point() #***Fanning
+#ggplot(forward, aes(x=PER, y=resid(forward))) + geom_point() #***drawn out and few obs but pattern shows
+#ggplot(forward, aes(x=MPG, y=resid(forward))) + geom_point() #***Notable fanning, looks to be both sides tho
+#ggplot(forward, aes(x=USG., y=resid(forward))) + geom_point() #***Fanning
 ```
 
 take turns removing PER, USG., FoulPG, APG
@@ -299,15 +301,15 @@ ggplot(model, aes(x=n.index, y=dffits(model))) + geom_point(color='red') + geom_
 TEST
 ```{r test}
 #Total Stat data
-testStats <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\testStats.csv", header=TRUE)
+testStats <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\testStats.csv", header=TRUE)
 
 testSal <-salary %>% subset(select = c(Player,Sal2223))
 
 #per100 test data
-test100 <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\test100Stats.csv")
+test100 <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\test100Stats.csv")
 
 #advanced data
-testAdvanced <- read.csv("C:\\Users\\ericd\\Desktop\\NBA Project\\testAdvanced.csv")
+testAdvanced <- read.csv("C:\\Users\\ericd\\OneDrive - North Carolina State University\\Desktop\\PersonalProjects\\NBA-Salary-Prediction\\Data\\testAdvanced.csv")
 
 #merge 100 onto stats
 test <- merge(testStats, test100, by=c('Player', 'Tm'), all.x=TRUE)
